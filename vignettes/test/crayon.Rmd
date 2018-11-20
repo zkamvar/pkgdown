@@ -8,11 +8,12 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 
 ```{r}
-cat(crayon::red("This is red"), "\n")
+cat(crayon::red("This is red\nfoo bar"))
 cat(crayon::blue("This is blue\n"), "\n")
 
 message(crayon::green("This is green"))
 
+cat("some regular text")
 warning(crayon::bold("This is bold"))
 ```
 Some text

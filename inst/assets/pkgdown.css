@@ -232,5 +232,5 @@ mark {
 
 div.sourceCode + div > pre.r {
   padding-top: 0;
-  margin-top: -10px;
+  margin-top: -19.5px; /* 10px for the margin 9.5 px for the padding */
 }
