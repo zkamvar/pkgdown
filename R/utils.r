@@ -122,7 +122,7 @@ with_dir <- function(new, code) {
   force(code)
 }
 colourise_chunk <- function(x, options) {
-  sprintf('<div class = "output"><pre class="knitr %s">%s</pre></div>\n',
+  sprintf('<div class = "sourceCode output"><pre class="knitr %s">%s</pre></div>\n',
     tolower(options$engine),
     fansi::sgr_to_html(x))
 }
