@@ -49,3 +49,28 @@ test_that(".github files are copied and linked", {
   expect_true(any(grepl('href="CODE_OF_CONDUCT.html"', lines)))
   expect_true(file_exists(path(pkg, "docs", "404.html")))
 })
+
+# extra md files ----------------------------------------------------------
+
+test_that("home md files are copied", {
+  skip_if_no_pandoc()
+  pkg <- test_path("assets/home-md")
+  skip_if_not(file_exists(path(pkg, "extra.md"))[[1]])
+
+  on.exit(clean_site(pkg))
+  expect_output(build_home(pkg))
+
+  expect_true(file_exists(path(pkg, "docs", "extra.html")))
+  expect_true(file_exists(path(pkg, "docs", "index.html")))
+
+  # The index is identical to the README
+  idx  <- xml2::read_html(path(pkg, "docs", "index.html"))
+  expect_true(xml2::xml_find_lgl(idx, "boolean(.//h1[text()='Test'])"))
+
+  # Bug fix items should be in a custom div class called 'buggin'
+  # This will fail using pandoc with markdown_github
+  html <- xml2::read_html(path(pkg, "docs", "extra.html"))
+  handles <- xml2::xml_find_all(html, ".//div[@class='buggin']/ul/*")
+  expect_length(handles, 2L)
+
+})
