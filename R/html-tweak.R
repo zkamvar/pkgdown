@@ -94,6 +94,24 @@ prepend_class <- function(x, class = "table") {
   }
 }
 
+gh_span_to_link <- function(span) {
+  txt <- xml2::xml_text(span)
+  link <- paste0("https://github.com/", substr(txt, 2, nchar(txt)))
+  xml2::xml_set_name(span, "a")
+  xml2::xml_set_attr(span, "class", NULL)
+  xml2::xml_set_attr(span, "href", link)
+}
+
+tweak_gh_user <- function(html) {
+  spans <- xml2::xml_find_all(html, ".//span")
+  if (length(spans) != 0) {
+    handles <- grepl("^[@][-A-Za-z0-9]+?$", xml2::xml_text(spans), perl = TRUE)
+    purrr::walk(spans[handles], gh_span_to_link)
+  }
+  invisible()
+
+}
+
 # File level tweaks --------------------------------------------
 
 tweak_rmarkdown_html <- function(html, input_path) {

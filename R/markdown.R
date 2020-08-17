@@ -2,10 +2,35 @@ markdown <- function(path = NULL, ..., strip_header = FALSE) {
   tmp <- tempfile(fileext = ".html")
   on.exit(file_delete(tmp), add = TRUE)
 
+  markdown_github <- c(
+    # from https://pandoc.org/MANUAL.html#markdown-variants
+    "pipe_tables",
+    "raw_html",
+    "fenced_code_blocks",
+    "auto_identifiers",
+    "gfm_auto_identifiers",
+    "backtick_code_blocks",
+    "autolink_bare_uris",
+    "space_in_atx_header",
+    "intraword_underscores",
+    "strikeout",
+    "task_lists",
+    "emoji",
+    "shortcut_reference_links",
+    "angle_brackets_escapable",
+    "lists_without_preceding_blankline",
+    # ours -----------------------------
+    "hard_line_breaks",
+    "smart",
+    "auto_identifiers",
+    "tex_math_dollars",
+    "tex_math_single_backslash",
+    "markdown_in_html_blocks"
+  ) 
   if (rmarkdown::pandoc_available("2.0")) {
-    from <- "markdown_github-hard_line_breaks+smart+auto_identifiers+tex_math_dollars+tex_math_single_backslash+markdown_in_html_blocks"
+    from <- paste0("markdown-", paste(markdown_github, collapse = "+"))
   } else if (rmarkdown::pandoc_available("1.12.3")) {
-    from <- "markdown_github-hard_line_breaks+tex_math_dollars+tex_math_single_backslash"
+    from <- "markdown-hard_line_breaks+tex_math_dollars+tex_math_single_backslash"
   } else {
     stop("Pandoc not available", call. = FALSE)
   }
@@ -40,6 +65,7 @@ markdown <- function(path = NULL, ..., strip_header = FALSE) {
   downlit::downlit_html_node(xml)
   tweak_md_links(xml)
   tweak_anchors(xml, only_contents = FALSE)
+  tweak_gh_user(xml)
 
   # Extract body of html - as.character renders as xml which adds
   # significant whitespace in tags like pre
