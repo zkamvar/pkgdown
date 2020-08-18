@@ -20,7 +20,6 @@ markdown <- function(path = NULL, ..., strip_header = FALSE) {
     "angle_brackets_escapable",
     "lists_without_preceding_blankline",
     # ours -----------------------------
-    "hard_line_breaks",
     "smart",
     "auto_identifiers",
     "tex_math_dollars",
@@ -28,7 +27,11 @@ markdown <- function(path = NULL, ..., strip_header = FALSE) {
     "markdown_in_html_blocks"
   ) 
   if (rmarkdown::pandoc_available("2.0")) {
-    from <- paste0("markdown-", paste(markdown_github, collapse = "+"))
+    from <- paste0("markdown", 
+      "-hard_line_breaks", 
+      "+",
+      paste(markdown_github, collapse = "+")
+    )
   } else if (rmarkdown::pandoc_available("1.12.3")) {
     from <- "markdown-hard_line_breaks+tex_math_dollars+tex_math_single_backslash"
   } else {

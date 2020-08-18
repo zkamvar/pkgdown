@@ -68,9 +68,11 @@ test_that("home md files are copied", {
   expect_true(xml2::xml_find_lgl(idx, "boolean(.//h1[text()='Test'])"))
 
   # Bug fix items should be in a custom div class called 'buggin'
-  # This will fail using pandoc with markdown_github
   html <- xml2::read_html(path(pkg, "docs", "extra.html"))
-  handles <- xml2::xml_find_all(html, ".//div[@class='buggin']/ul/*")
+  expect_true(xml2::xml_find_lgl(html, "boolean(.//div[contains(@class, 'buggin')])"))
+
+  # This will fail using pandoc with markdown_github
+  handles <- xml2::xml_find_all(html, ".//div[contains(@class, 'buggin')]/ul/*")
   expect_length(handles, 2L)
 
 })
