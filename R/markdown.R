@@ -48,6 +48,7 @@ markdown <- function(path = NULL, ..., strip_header = FALSE) {
       if (rmarkdown::pandoc_available("2.0")) c("-t", "html4"),
       "--indented-code-classes=R",
       "--section-divs",
+      "--mathjax",
       ...
     ))
   )
